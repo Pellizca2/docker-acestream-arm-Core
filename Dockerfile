@@ -1,4 +1,3 @@
-# Usar la imagen base para Raspberry Pi con Debian
 FROM balenalib/raspberry-pi-debian as build
 
 # Actualizar el sistema y añadir las dependencias necesarias
