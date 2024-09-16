@@ -1,7 +1,7 @@
 
 ARG ALPINE_IMAGE=python:3-alpine3.18
 
-FROM ${ALPINE_IMAGE} as build
+FROM ${python:3-alpine3.18} as build
 
 # Instalar herramientas necesarias: wget para descargar y tar para extraer
 RUN apk add --no-cache wget tar
