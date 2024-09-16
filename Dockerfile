@@ -1,4 +1,4 @@
-# Usamos la imagen base de Alpine, que se pasa como argumento al construir
+
 ARG ALPINE_IMAGE=python:3-alpine3.18
 
 FROM ${ALPINE_IMAGE} as build
