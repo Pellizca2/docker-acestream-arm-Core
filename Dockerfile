@@ -1,11 +1,10 @@
-ARG ALPINE_IMAGE=python:3-alpine3.18
+# Usar la imagen base para Raspberry Pi con Debian
+FROM balenalib/raspberry-pi-debian as build
 
-FROM ${ALPINE_IMAGE} as build
-
-# Install build dependencies
-RUN apk add --no-cache wget tar
-
-
+# Actualizar el sistema y añadir las dependencias necesarias
+RUN apt update -y && \
+    apt upgrade -y && \
+    apt install -y wget tar
 
 # Descargar el archivo tar.gz desde el repositorio de GitHub
 RUN wget -O /tmp/engine_3.1.80_armv7.tar.gz https://github.com/jordicb/docker-acestream-arm/raw/main/engine_3.1.80_armv7.tar.gz
@@ -13,6 +12,7 @@ RUN wget -O /tmp/engine_3.1.80_armv7.tar.gz https://github.com/jordicb/docker-ac
 # Extraer el archivo descargado en el directorio /tmp
 RUN tar -xzf /tmp/engine_3.1.80_armv7.tar.gz -C /tmp
 
+# Mover archivos y hacer configuraciones necesarias
 RUN cd /tmp/acestream.engine && \
     mv androidfs/system / && \
     mv androidfs/acestream.engine / && \
@@ -25,10 +25,11 @@ RUN cd /tmp/acestream.engine && \
     find /system -type f -exec chmod 644 {} \; && \
     chmod 755 /system/bin/* /acestream.engine/python/bin/python
 
-# If you want build image with custom configuration, uncomment next line
+# Si deseas construir la imagen con una configuración personalizada, descomenta la siguiente línea
 # ADD acestream.conf  /acestream.engine/
 
+# Exponer los puertos necesarios para AceStream
 EXPOSE 8621 6878
 
-
-CMD "/system/bin/acestream.sh"
+# Definir el comando que se ejecutará cuando el contenedor se inicie
+CMD ["/system/bin/acestream.sh"]
