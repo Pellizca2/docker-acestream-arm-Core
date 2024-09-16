@@ -1,17 +1,12 @@
 FROM balenalib/raspberry-pi-debian as build
 
-# Actualizar el sistema y añadir las dependencias necesarias
-RUN apt update -y && \
-    apt upgrade -y && \
+RUN apt update -y && apt upgrade -y && \
     apt install -y wget tar
 
-# Descargar el archivo tar.gz desde el repositorio de GitHub
 RUN wget -O /tmp/engine_3.1.80_armv7.tar.gz https://github.com/jordicb/docker-acestream-arm/raw/main/engine_3.1.80_armv7.tar.gz
 
-# Extraer el archivo descargado en el directorio /tmp
 RUN tar -xzf /tmp/engine_3.1.80_armv7.tar.gz -C /tmp
 
-# Mover archivos y hacer configuraciones necesarias
 RUN cd /tmp/acestream.engine && \
     mv androidfs/system / && \
     mv androidfs/acestream.engine / && \
@@ -24,11 +19,11 @@ RUN cd /tmp/acestream.engine && \
     find /system -type f -exec chmod 644 {} \; && \
     chmod 755 /system/bin/* /acestream.engine/python/bin/python
 
-# Si deseas construir la imagen con una configuración personalizada, descomenta la siguiente línea
-# ADD acestream.conf  /acestream.engine/
+# Asegurarse de que el script sea ejecutable
+RUN chmod +x /system/bin/acestream.sh
 
-# Exponer los puertos necesarios para AceStream
+# Exponer los puertos necesarios
 EXPOSE 8621 6878
 
-# Definir el comando que se ejecutará cuando el contenedor se inicie
-CMD ["/system/bin/acestream.sh"]
+# Ejecutar el script usando /bin/sh
+CMD ["/bin/sh", "/system/bin/acestream.sh"]
