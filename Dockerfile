@@ -1,10 +1,6 @@
+FROM balenalib/raspberry-pi-debian
 
-ARG ALPINE_IMAGE=python:3-alpine3.18
-
-FROM ${python:3-alpine3.18} as build
-
-# Instalar herramientas necesarias: wget para descargar y tar para extraer
-RUN apk add --no-cache wget tar
+RUN apt update -y && apt upgrade -y
 
 # Descargar el archivo tar.gz desde el repositorio de GitHub
 RUN wget -O /tmp/engine_3.1.80_armv7.tar.gz https://github.com/jordicb/docker-acestream-arm/raw/main/engine_3.1.80_armv7.tar.gz
