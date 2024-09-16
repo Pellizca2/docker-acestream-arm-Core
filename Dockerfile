@@ -1,16 +1,14 @@
-ARG ALPINE_IMAGE=python:3-alpine3.18
-
 # Usamos la imagen base de Alpine, que se pasa como argumento al construir
 FROM ${ALPINE_IMAGE} as build
 
-# Instalar herramientas necesarias (wget o curl)
-RUN apk add --no-cache wget
+# Instalar herramientas necesarias: wget para descargar y tar para extraer
+RUN apk add --no-cache wget tar
 
 # Descargar el archivo tar.gz desde el repositorio de GitHub
 RUN wget -O /tmp/engine_3.1.80_armv7.tar.gz https://github.com/jordicb/docker-acestream-arm/raw/main/engine_3.1.80_armv7.tar.gz
 
 # Extraer el archivo descargado en el directorio /tmp
-ADD engine_3.1.80_armv7.tar.gz /tmp
+RUN tar -xzf /tmp/engine_3.1.80_armv7.tar.gz -C /tmp
 
 RUN cd /tmp/acestream.engine && \
     mv androidfs/system / && \
